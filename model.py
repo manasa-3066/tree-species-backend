@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# ---------- MODEL LOADING (CRITICAL FIX) ----------
+# ---------- MODEL LOADING ----------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "tree_model.h5")
 
@@ -26,12 +26,12 @@ def predict_tree(image_path: str):
 
     pred = model.predict(arr)
     idx = int(np.argmax(pred))
-    confidence = float(pred[0][idx])
+    confidence = round(float(pred[0][idx]) * 100, 2)
 
     return CLASS_NAMES[idx], confidence
 
 
-# ---------- OPENAI (SAFE INIT) ----------
+# ---------- OPENAI ----------
 load_dotenv()
 
 client = None
@@ -40,7 +40,25 @@ if os.getenv("OPENAI_API_KEY"):
 
 def get_tree_awareness(tree_name: str):
     if client is None:
-        return "Awareness service not available."
+    return (
+        f"{tree_name} is a valuable and ecologically significant tree species. "
+        "Trees like this play a crucial role in maintaining environmental balance "
+        "by absorbing carbon dioxide, releasing oxygen, and improving air quality.\n\n"
+
+        "They support biodiversity by providing food and shelter to birds, insects, "
+        "and other living organisms, helping sustain healthy ecosystems. "
+        "Many tree species also contribute to soil conservation by preventing erosion "
+        "and maintaining soil fertility.\n\n"
+
+        "Beyond environmental benefits, such trees often hold cultural, medicinal, "
+        "and social importance in local communities. They have been traditionally used "
+        "for shade, healing practices, and as natural resources that support livelihoods.\n\n"
+
+        "Protecting and preserving trees like this is essential for combating climate change, "
+        "supporting biodiversity, and ensuring a healthier and more sustainable planet "
+        "for present and future generations."
+    )
+
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
