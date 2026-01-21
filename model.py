@@ -40,8 +40,8 @@ if os.getenv("OPENAI_API_KEY"):
 
 def get_tree_awareness(tree_name: str):
     if client is None:
-    return (
-        f"{tree_name} is a valuable and ecologically significant tree species. "
+        return (
+         f"{tree_name} is a valuable and ecologically significant tree species. "
         "Trees like this play a crucial role in maintaining environmental balance "
         "by absorbing carbon dioxide, releasing oxygen, and improving air quality.\n\n"
 
@@ -57,7 +57,7 @@ def get_tree_awareness(tree_name: str):
         "Protecting and preserving trees like this is essential for combating climate change, "
         "supporting biodiversity, and ensuring a healthier and more sustainable planet "
         "for present and future generations."
-    )
+         )
 
 
     response = client.chat.completions.create(
@@ -77,3 +77,4 @@ def get_tree_awareness(tree_name: str):
         temperature=0.3
     )
     return response.choices[0].message.content
+
